@@ -56,12 +56,11 @@ class DQNAgent:
         self.env_name = env_name       
         self.env = gym.make(env_name)
         self.env.seed(0)  
-        # by default, CartPole-v1 has max episode steps = 500
-        # we can use this to experiment beyond 500
-        self.env._max_episode_steps = 4000
+       
+        self.env._max_episode_steps = 1000
         self.state_size = self.env.observation_space.shape[0]
         self.action_size = self.env.action_space.n
-        self.EPISODES = 3000
+        self.EPISODES = 2000
         
         # Instantiate memory
         memory_size = 10000
@@ -86,10 +85,10 @@ class DQNAgent:
 
         self.ROWS = 160
         self.COLS = 240
-        self.REM_STEP = 4
+        self.FRAME_STEP = 4
 
-        self.image_memory = np.zeros((self.REM_STEP, self.ROWS, self.COLS))
-        self.state_size = (self.REM_STEP, self.ROWS, self.COLS)
+        self.image_memory = np.zeros((self.FRAME_STEP, self.ROWS, self.COLS))
+        self.state_size = (self.FRAME_STEP, self.ROWS, self.COLS)
         
         # create main model and target model
         self.model = Model(input_shape=self.state_size, action_space = self.action_size)
@@ -167,26 +166,9 @@ class DQNAgent:
     def save(self, name):
         self.model.save(name)
 
-    pylab.figure(figsize=(18, 9))
-    def PlotModel(self, score, episode):
-        self.scores.append(score)
-        self.episodes.append(episode)
-        self.average.append(sum(self.scores[-100:]) / len(self.scores[-100:]))
-        pylab.plot(self.episodes, self.scores, 'b')
-        pylab.plot(self.episodes, self.average, 'r')
-        pylab.ylabel('Score', fontsize=18)
-        pylab.xlabel('Steps', fontsize=18)
-        dqn = 'DQN_'
-       
-        try:
-            pylab.savefig(dqn+self.env_name+"_CNN.pdf")
-        except OSError:
-            pass
 
-        return str(self.average[-1])[:5]
-
-    def imshow(self, image, rem_step=0):
-        cv2.imshow("cartpole"+str(rem_step), image[rem_step,...])
+    def imshow(self, image, frame_step=0):
+        cv2.imshow("cartpole"+str(frame_step), image[frame_step,...])
         if cv2.waitKey(25) & 0xFF == ord("q"):
             cv2.destroyAllWindows()
             return
@@ -207,7 +189,7 @@ class DQNAgent:
 
     def reset(self):
         self.env.reset()
-        for i in range(self.REM_STEP):
+        for i in range(self.FRAME_STEP):
             state = self.GetImage()
         return state
 
@@ -234,14 +216,14 @@ class DQNAgent:
                 state = next_state
                 i += 1
                 if done:
-                    # every REM_STEP update target model
-                    if e % self.REM_STEP == 0:
+                    if e % self.FRAME_STEP == 0:
                         self.update_target_model()
                     
-                    # every episode, plot the result
-                    average = self.PlotModel(i, e)
-                    
-                    print("episode: {}/{}, score: {}, average: {}".format(e, self.EPISODES, i, average))
+                    self.scores.append(i)
+                    self.episodes.append(e)
+                    self.average.append(sum(self.scores[-100:]) / len(self.scores[-100:]))
+            
+                    print("episode: {}/{}, score: {}".format(e, self.EPISODES, i))
                     if i == self.env._max_episode_steps:
                         print("Saving trained model to", self.Model_name)
                         #self.save(self.Model_name)

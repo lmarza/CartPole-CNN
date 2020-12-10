@@ -1,21 +1,14 @@
 import gym
 import random
-from tqdm import tqdm
 from keras import Sequential
 from collections import deque
 from keras.layers import Dense
 from keras.optimizers import Adam
-import matplotlib.pyplot as plt
-
 import numpy as np
-env = gym.make('CartPole-v0')
-env.seed(0)
-np.random.seed(0)
-
 
 class DQN:
 
-    """ Implementation of deep q learning algorithm """
+    """ Implementation of DQN algorithm """
 
     def __init__(self, action_space, state_space):
 
@@ -29,6 +22,9 @@ class DQN:
         self.learning_rate = 0.001
         self.memory = deque(maxlen=10000)
         self.model = self.build_model()
+        self.scores = []
+        self.episodes = []
+        self.average = []
 
     def build_model(self):
 
@@ -76,18 +72,15 @@ class DQN:
     
     
 
-
 def train_dqn(episode):
-
-    loss = []
     agent = DQN(env.action_space.n, env.observation_space.shape[0])
+    scores = []
     for e in (range(episode)):
         state = env.reset()
         state = np.reshape(state, (1, 4))
         score = 0
         max_steps = 1000
         for i in range(max_steps):
-        
             #env.render()
             action = agent.act(state)
             next_state, reward, done, _ = env.step(action)
@@ -97,31 +90,17 @@ def train_dqn(episode):
             state = next_state
             agent.replay()
             if done:
+                scores.append(score)
+                np.savetxt('result.out', scores, delimiter='\n')
                 print("episode: {}/{}, score: {}".format(e, episode, score))
+                #agent.PlotModel(score, e)
                 break
-        loss.append(score)
-    return loss
-
-
-def random_policy(episode, step):
-
-    for i_episode in range(episode):
-        env.reset()
-        for t in range(step):
-            env.render()
-            action = env.action_space.sample()
-            state, reward, done, info = env.step(action)
-            if done:
-                print("Episode finished after {} timesteps".format(t+1))
-                break
-            print("Starting next episode")
-
-
-
+    return scores    
 
 if __name__ == '__main__':
-
-    ep = 200
-    loss = train_dqn(ep)
-    plt.plot([i+1 for i in range(0, ep, 2)], loss[::2])
-    plt.show()
+    env = gym.make('CartPole-v1')
+    env.seed(0)
+    np.random.seed(0)
+    ep = 300
+    scores = train_dqn(ep)
+    
