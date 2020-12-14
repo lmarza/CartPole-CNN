@@ -20,28 +20,28 @@ session = InteractiveSession(config=config)
 
 
 
-def Model(input_shape, action_space):
+def Model_(input_shape, action_space):
     input_x = Input(input_shape)
-    input = input_x
+    input_ = input_x
     
-    input = Conv2D(64, 5, strides=(3, 3),padding="valid", input_shape=input_shape, activation="relu", data_format="channels_first")(input)
-    input = Conv2D(64, 4, strides=(2, 2),padding="valid", activation="relu", data_format="channels_first")(input)
-    input = Conv2D(64, 3, strides=(1, 1),padding="valid", activation="relu", data_format="channels_first")(input)
-    input = Flatten()(input)
+    input_ = Conv2D(64, 5, strides=(3, 3),padding="valid", input_shape=input_shape, activation="relu", data_format="channels_first")(input_)
+    input_ = Conv2D(64, 4, strides=(2, 2),padding="valid", activation="relu", data_format="channels_first")(input_)
+    input_ = Conv2D(64, 3, strides=(1, 1),padding="valid", activation="relu", data_format="channels_first")(input_)
+    input_ = Flatten()(input_)
     # 'Dense' is the basic form of a neural network layer
     # Input Layer of state size(4) and Hidden Layer with 512 nodes
-    input = Dense(512, activation="relu", kernel_initializer='he_uniform')(input)
+    input_ = Dense(512, activation="relu", kernel_initializer='he_uniform')(input_)
 
     # Hidden layer with 256 nodes
-    input = Dense(256, activation="relu", kernel_initializer='he_uniform')(input)
+    input_ = Dense(256, activation="relu", kernel_initializer='he_uniform')(input_)
     
     # Hidden layer with 64 nodes
-    input = Dense(64, activation="relu", kernel_initializer='he_uniform')(input)
+    input_ = Dense(64, activation="relu", kernel_initializer='he_uniform')(input_)
 
     # Output Layer with # of actions: 2 nodes (left, right)
-    input = Dense(action_space, activation="linear", kernel_initializer='he_uniform')(input)
+    input_ = Dense(action_space, activation="linear", kernel_initializer='he_uniform')(input_)
 
-    model = Model(inputs = input_x, outputs = input)
+    model = Model(inputs = input_x, outputs = input_)
     model.compile(loss="mean_squared_error", optimizer=RMSprop(lr=0.00025, rho=0.95, epsilon=0.01), metrics=["accuracy"])
 
     # export an image of model
@@ -91,8 +91,8 @@ class DQNAgent:
         self.state_size = (self.FRAME_STEP, self.ROWS, self.COLS)
         
         # create main model and target model
-        self.model = Model(input_shape=self.state_size, action_space = self.action_size)
-        self.target_model = Model(input_shape=self.state_size, action_space = self.action_size)  
+        self.model = Model_(input_shape=self.state_size, action_space = self.action_size)
+        self.target_model = Model_(input_shape=self.state_size, action_space = self.action_size)  
 
     # after some time interval update the target model to be same with model
     def update_target_model(self):
