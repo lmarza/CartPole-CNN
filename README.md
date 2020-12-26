@@ -3,7 +3,7 @@
 *Tensorflow*: [![PyPI](https://badge.fury.io/py/tensorflow.svg)](https://badge.fury.io/py/tensorflow)  
 *Keras*: [![Keras](https://img.shields.io/pypi/pyversions/keras.svg?style=plastic)](https://badge.fury.io/py/keras)
 
-**Problem definition**
+### Problem definition
 <img align="center" src=https://i.imgur.com/IPlXZ5P.png width="600">
 
 
