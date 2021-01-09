@@ -41,7 +41,7 @@ As we can see from the plot starting from episode 150 more or less the CartPole-
 
 <img align="center" src="results/resultCNN.png" width="800">
 
-Making a comparison between the two plots, with the same number of episodes completed, we note that the use of images and in particular CNN to solve the task requires more time to consider the CartPole task solved. However, we can see how the average is constantly increasing, so I speculate that with more episodes the task can be solved also with CNN.
+Making a comparison between the two plots, with the same number of episodes completed, we note that the use of images and in particular CNN to solve the task requires more time to consider the CartPole task solved. However, we can see how the average is constantly increasing, so I speculate that with less than 5000 episodes the task can be solved also with CNN.
 
 
 
