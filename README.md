@@ -20,9 +20,9 @@ CartPole-v1 defines "solving" as getting average reward of 195.0 over 100 consec
 
 ## Model Architecture
 Resolving CartPole using images involves using the $env.render(mode =$ 'rgb\_array'$)$ function to have a rendered frame image for each step of the episode.
-Cartpole gym environment outputs 600x400 RGB arrays (600x400x3). That was way too many pixels with such simple task, more than I needed, so I converted the output to grayscale and I downsized it. The result was something like this:
+The Cartpole gymenvironment emits 600x400 RGB arrays(600x400x3). There were too manypixels giving no information about the cart position (for example the set ofwhite pixels all on the right and left), more than necessary, so in order tosimplify the task I converted the output to grayscale and resized the image to 240x160:
 
-<img align="center" src=https://i.imgur.com/WOU6srq.png width="300">
+<img align="center" src="images/cartResize.png" width="800">
 
 **Architecture used:**
 
@@ -41,7 +41,7 @@ As we can see from the plot starting from episode 150 more or less the CartPole-
 
 <img align="center" src="results/resultCNN.png" width="800">
 
-Making a comparison between the two plots, with the same number of episodes completed, we note that the use of images and in particular CNN to solve the task requires more time to consider the CartPole task solved. However, we can see how the average is constantly increasing, so I speculate that with other 2000 episodes the task can be solved also with CNN.
+Making a comparison between the two plots, with the same number of episodes completed, we note that the use of images and in particular CNN to solve the task requires more time to consider the CartPole task solved. However, we can see how the average is constantly increasing, so I speculate that with more episodes the task can be solved also with CNN.
 
 
 
